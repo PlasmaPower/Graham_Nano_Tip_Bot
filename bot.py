@@ -1340,6 +1340,7 @@ async def giveawaystats(ctx):
 	if message.channel.id in settings.no_spam_channels:
 		return
 	elif GIVEAWAY_CHANNELS and message.channel.id not in GIVEAWAY_CHANNELS:
+		logger.info('ignoring giveaway stats command in channel %s', message.channel.id)
 		return
 	if not is_private(message.channel):
 		if message.channel.id not in last_gs:
