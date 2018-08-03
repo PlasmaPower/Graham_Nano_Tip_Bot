@@ -52,6 +52,11 @@ SEND_JOB=10
 RECEIVE_CHECK_JOB=300
 # Pool giveaway auto amount (1%)
 TIPGIVEAWAY_AUTO_ENTRY=int(.01 * GIVEAWAY_MINIMUM)
+GIVEAWAY_CHANNELS=None
+try:
+	GIVEAWAY_CHANNELS=settings.giveaway_channels
+except:
+	pass
 
 # HELP menu header
 AUTHOR_HEADER="Graham v{0} (NANO Tip Bot)".format(BOT_VERSION)
@@ -1161,7 +1166,7 @@ async def givearai(ctx):
 	message = ctx.message
 	if is_private(message.channel):
 		return
-	elif settings.get('giveaway_channels') and message.channel.id not in settings['giveaway_channels']:
+	elif GIVEAWAY_CHANNELS and message.channel.id not in GIVEAWAY_CHANNELS:
 		return
 	elif paused:
 		await pause_msg(message)
@@ -1243,7 +1248,7 @@ async def tipgiveaway(ctx):
 async def tip_giveaway(message, ticket=False):
 	if is_private(message.channel) and not ticket:
 		return
-	elif settings.get('giveaway_channels') and message.channel.id not in settings['giveaway_channels']:
+	elif GIVEAWAY_CHANNELS and message.channel.id not in GIVEAWAY_CHANNELS:
 		return
 	elif paused:
 		await pause_msg(message)
@@ -1321,7 +1326,7 @@ async def tip_giveaway(message, ticket=False):
 @client.command(aliases=get_aliases(TICKETSTATUS,exclude='ticketstatus'))
 async def ticketstatus(ctx):
 	message = ctx.message
-	if settings.get('giveaway_channels') and message.channel.id not in settings['giveaway_channels']:
+	if GIVEAWAY_CHANNELS and message.channel.id not in GIVEAWAY_CHANNELS:
 		return
 	user = db.get_user_by_id(message.author.id)
 	if user is not None:
@@ -1334,7 +1339,7 @@ async def giveawaystats(ctx):
 	global last_gs
 	if message.channel.id in settings.no_spam_channels:
 		return
-	elif settings.get('giveaway_channels') and message.channel.id not in settings['giveaway_channels']:
+	elif GIVEAWAY_CHANNELS and message.channel.id not in GIVEAWAY_CHANNELS:
 		return
 	if not is_private(message.channel):
 		if message.channel.id not in last_gs:
@@ -1381,7 +1386,7 @@ async def winners(ctx):
 	message = ctx.message
 	if message.channel.id in settings.no_spam_channels:
 		return
-	elif settings.get('giveaway_channels') and message.channel.id not in settings['giveaway_channels']:
+	elif GIVEAWAY_CHANNELS and message.channel.id not in GIVEAWAY_CHANNELS:
 		return
 	# Check spam
 	global last_winners
