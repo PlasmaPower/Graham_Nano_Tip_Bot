@@ -1161,6 +1161,8 @@ async def givearai(ctx):
 	message = ctx.message
 	if is_private(message.channel):
 		return
+	elif settings.get('giveaway_channels') and message.channel.id not in settings['giveaway_channels']:
+		return
 	elif paused:
 		await pause_msg(message)
 		return
@@ -1241,6 +1243,8 @@ async def tipgiveaway(ctx):
 async def tip_giveaway(message, ticket=False):
 	if is_private(message.channel) and not ticket:
 		return
+	elif settings.get('giveaway_channels') and message.channel.id not in settings['giveaway_channels']:
+		return
 	elif paused:
 		await pause_msg(message)
 		return
@@ -1317,6 +1321,8 @@ async def tip_giveaway(message, ticket=False):
 @client.command(aliases=get_aliases(TICKETSTATUS,exclude='ticketstatus'))
 async def ticketstatus(ctx):
 	message = ctx.message
+	if settings.get('giveaway_channels') and message.channel.id not in settings['giveaway_channels']:
+		return
 	user = db.get_user_by_id(message.author.id)
 	if user is not None:
 		await post_dm(message.author, db.get_ticket_status(message.author.id))
@@ -1327,6 +1333,8 @@ async def giveawaystats(ctx):
 	message = ctx.message
 	global last_gs
 	if message.channel.id in settings.no_spam_channels:
+		return
+	elif settings.get('giveaway_channels') and message.channel.id not in settings['giveaway_channels']:
 		return
 	if not is_private(message.channel):
 		if message.channel.id not in last_gs:
@@ -1372,6 +1380,8 @@ async def finish_giveaway(delay):
 async def winners(ctx):
 	message = ctx.message
 	if message.channel.id in settings.no_spam_channels:
+		return
+	elif settings.get('giveaway_channels') and message.channel.id not in settings['giveaway_channels']:
 		return
 	# Check spam
 	global last_winners
